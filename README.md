@@ -1,17 +1,11 @@
 # kani-robo-r2p2
 
+  
 ## sample
 
-### LED
-pin = GPIO.new(25, GPIO::OUT)
-while true
-  pin.write 1
-  sleep 1
-  pin.write 0
-  sleep 1
-end
-
 ### temperature
+
+```ruby
 require 'adc'
 
 def cal_temp(val)
@@ -24,8 +18,14 @@ while true
   puts cal_temp(adc.read)
   sleep 1
 end
+```
 
 ### photo reflector
+
+白のときの値 0.22 前後
+黒のときの値 3.3 前後
+
+```ruby
 require 'adc'
 
 adc = ADC.new(26)
@@ -34,8 +34,11 @@ while true
   puts adc.read
   sleep 1
 end
+```
 
-### LED 
+### LED
+
+```ruby
 require "gpio"
 
 class LED
@@ -53,3 +56,4 @@ end
 
 led = LED.new(25)
 led.blink
+```
