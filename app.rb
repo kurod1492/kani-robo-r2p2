@@ -52,17 +52,27 @@ class Robot
 
   def turn_left
     leg_r_fwd
-    leg_l_rwd
+    leg_l_stop
   end
 
   def turn_right
-    leg_r_rwd
+    leg_r_stop
     leg_l_fwd
   end
 
   def stop
     leg_r_stop
     leg_l_stop
+  end
+
+  def rotate_right
+    leg_r_rwd
+    leg_l_fwd
+  end
+
+  def rotate_left
+    leg_r_fwd
+    leg_l_rwd
   end
 
   def swing
@@ -72,13 +82,19 @@ class Robot
     20000.times {}
   end
 
-  def led_on
+  def led1_on
     @led1.write 1
+  end
+
+  def led1_off
+    @led1.write 0
+  end
+
+  def led2_on
     @led2.write 1
   end
 
-  def led_off
-    @led1.write 0
+  def led2_off
     @led2.write 0
   end
 
@@ -93,11 +109,12 @@ class Robot
 end
 
 # Robot.new(led1, led2, mot1, mot2, mot3, mot4, ref1, ref2, servo)
-r = Robot.new(25, 1, 16, 17, 18, 19, 26, 27, 0)
+r = Robot.new(1, 2, 16, 17, 18, 19, 26, 27, 0)
 
-r.led_on
+r.led1_on
+r.led2_on
 
-until r.ref_r < 0.3 && r.ref_l < 0.3
+until r.ref_r < 0.3 && r.ref_l < 0.3 do
   r.forward
   sleep 0.5
   if r.ref_r < 0.3
@@ -109,7 +126,48 @@ until r.ref_r < 0.3 && r.ref_l < 0.3
     sleep 0.5
   end
 end
+ 
+r.led1_off
+r.led2_off
 
-r.stop
+r.forward
+sleep 2
 r.swing
-r.led_off
+
+r.led1_on
+
+until r.ref_r > 3 && r.ref_l > 3 do
+  r.forward
+  sleep 0.5
+end
+
+r.led1_off
+  
+r.rotate_right
+sleep 3
+
+r.led2_on
+  
+until r.ref_r > 3 && r.ref_l > 3 do
+  r.forward
+  sleep 0.5
+end
+
+r.led2_off
+  
+while true do
+  r.forward
+  r.led1_on
+  r.led2_on
+  sleep 0.5
+  r.led1_off
+  r.led2_off
+  if r.ref_r < 0.3
+    r.turn_right
+    sleep 0.5
+  end
+  if r.ref_l < 0.3
+    r.turn_left
+    sleep 0.5
+  end
+end
